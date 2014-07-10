@@ -1,3 +1,8 @@
+// Eventually this plugin will support any number of players.
+// And will also support a couple new features.
+// Right now it doesn't really do anything.
+// It will basically be an improvement to old 1v1 plugins.
+
 #pragma semicolon 1
  
 #include <sourcemod>
