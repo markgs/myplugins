@@ -35,14 +35,9 @@ static String:SINames[_:SIClasses][] =
         "tank",
         ""
 };
- 
-new Handle: hCvarDamageFromCaps = INVALID_HANDLE;
+
 new Handle: hSpecialInfectedHP[_:SIClasses] = INVALID_HANDLE;
 new Handle: hSurvivorCount;
-new Handle: hPounceDamage;
-new Handle: hRideDamage;
-new Handle: hPoundDamage;
-//new Handle: hPullDamage;
 new playersCapped = 0;
 
 public Plugin:myinfo =
@@ -65,12 +60,8 @@ public OnPluginStart()
         }
 		
 		//Cvars and whatnot
-        hCvarDamageFromCaps = CreateConVar("damage_from_caps", "33", "Amount of damage done (at once) before SI suicides.", FCVAR_PLUGIN, true, 1.0);
 		//hCvarLedgeHangCounts = CreateConVar("ledge_hang_counts", "0", "Should ledge hangs increase the capped survivor count?", FCVAR_PLUGIN);
         hSurvivorCount = FindConVar("survivor_limit");
-        hPounceDamage = FindConVar("z_pounce_damage");
-        hRideDamage = FindConVar("z_jockey_ride_damage");
-        hPoundDamage = FindConVar("z_charger_pound_damage");
 		//hPullDamage = FindConVar("smokersarebroken");
 		
 		//Hooks
@@ -90,36 +81,14 @@ public OnPluginStart()
 public Action:Event_Survivor_Capped(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	playersCapped = (playersCapped + 1);
-		
-	if (playersCapped >= GetConVarInt(hSurvivorCount))
-		{
-		SetConVarInt(hPounceDamage, hCvarDamageFromCaps);
-		SetConVarInt(hRideDamage, hCvarDamageFromCaps);
-		SetConVarInt(hPoundDamage, hCvarDamageFromCaps);
-		//SetConVarInt(smokersarebroken, hCvarDamageFromCaps);
-		}
-	else
-		{
-		ResetConVar(hPounceDamage);
-		ResetConVar(hRideDamage);
-		ResetConVar(hPoundDamage);
-		//ResetConVar(smokersarebroken);
-		}
 }
 
 public Action:Event_Survivor_Free(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	playersCapped = (playersCapped - 1);
-	if (playersCapped < GetConVarInt(hSurvivorCount))
-	{
-		ResetConVar(hPounceDamage);
-		ResetConVar(hRideDamage);
-		ResetConVar(hPoundDamage);
-		//ResetConVar(smokersarebroken);
-	}
 	if (playersCapped < 0)
 	{
-		playersCapped = 0
+		playersCapped = 0;
 	}
 }
 
@@ -131,10 +100,9 @@ public Action:Event_PlayerHurt(Handle:event, const String:name[], bool:dontBroad
         if (!IsClientAndInGame(attacker))
                 return;
        
-        new damage = GetEventInt(event, "dmg_health");
         new zombie_class = GetZombieClass(attacker);
        
-        if (GetClientTeam(attacker) == TEAM_INFECTED && zombie_class != _:TANK_CLASS && damage >= GetConVarInt(hCvarDamageFromCaps))
+        if (GetClientTeam(attacker) == TEAM_INFECTED && zombie_class != _:TANK_CLASS && playersCapped >= GetConVarInt(hSurvivorCount))
         {
                 new remaining_health = GetClientHealth(attacker);
                 PrintToChatAll("\x01 Infected (\x03%N\x01) health remaining: \x05%d\x01", attacker, remaining_health);
