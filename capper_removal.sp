@@ -119,7 +119,7 @@ public Action:Event_Survivor_Free(Handle:event, const String:name[], bool:dontBr
 	}
 	if (playersCapped < 0)
 	{
-		playersCapped = 0
+		playersCapped = 0;
 	}
 }
 
