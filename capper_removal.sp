@@ -65,26 +65,24 @@ public OnPluginStart()
         }
 		
 		//Cvars and whatnot
-		hCvarDamageFromCaps = CreateConVar("damage_from_caps", "33", "Amount of damage done (at once) before SI suicides.", FCVAR_PLUGIN, true, 1.0);
+        hCvarDamageFromCaps = CreateConVar("damage_from_caps", "33", "Amount of damage done (at once) before SI suicides.", FCVAR_PLUGIN, true, 1.0);
 		//hCvarLedgeHangCounts = CreateConVar("ledge_hang_counts", "0", "Should ledge hangs increase the capped survivor count?", FCVAR_PLUGIN);
-		hSurvivorCount = FindConVar("survivor_limit");
-		hPounceDamage = FindConVar("z_pounce_damage");
-		hRideDamage = FindConVar("z_jockey_ride_damage");
-		hPoundDamage = FindConVar("z_charger_pound_damage");
+        hSurvivorCount = FindConVar("survivor_limit");
+        hPounceDamage = FindConVar("z_pounce_damage");
+        hRideDamage = FindConVar("z_jockey_ride_damage");
+        hPoundDamage = FindConVar("z_charger_pound_damage");
 		//hPullDamage = FindConVar("smokersarebroken");
 		
 		//Hooks
-		HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
-		
-		HookEvent("lunge_pounce", Event_Survivor_Capped);
-		HookEvent("tongue_grab", Event_Survivor_Capped);
-		HookEvent("jockey_ride", Event_Survivor_Capped);
-		HookEvent("charger_pummel_start", Event_Survivor_Capped);
-
-		HookEvent("pounce_stopped", Event_Survivor_Free);
-		HookEvent("tongue_release", Event_Survivor_Free);
-		HookEvent("jockey_ride_end", Event_Survivor_Free);
-		HookEvent("charger_pummel_end", Event_Survivor_Free);
+        HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
+        HookEvent("lunge_pounce", Event_Survivor_Capped);
+        HookEvent("tongue_grab", Event_Survivor_Capped);
+        HookEvent("jockey_ride", Event_Survivor_Capped);
+        HookEvent("charger_pummel_start", Event_Survivor_Capped);
+        HookEvent("pounce_stopped", Event_Survivor_Free);
+        HookEvent("tongue_release", Event_Survivor_Free);
+        HookEvent("jockey_ride_end", Event_Survivor_Free);
+        HookEvent("charger_pummel_end", Event_Survivor_Free);
 
 		//HookEvent("player_ledge_grab", survivor_hung);
 }
@@ -139,7 +137,7 @@ public Action:Event_PlayerHurt(Handle:event, const String:name[], bool:dontBroad
         if (GetClientTeam(attacker) == TEAM_INFECTED && zombie_class != _:TANK_CLASS && damage >= GetConVarInt(hCvarDamageFromCaps))
         {
                 new remaining_health = GetClientHealth(attacker);
-                PrintToChatAll("\x01[ProMod 1v1] Infected (\x03%N\x01) health remaining: \x05%d\x01", attacker, remaining_health);
+                PrintToChatAll("\x01 Infected (\x03%N\x01) health remaining: \x05%d\x01", attacker, remaining_health);
                 
                 ForcePlayerSuicide(attacker);    
                 
