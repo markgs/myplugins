@@ -48,7 +48,7 @@ new Handle: hSpecialInfectedHP[_:SIClasses] = INVALID_HANDLE;
 
 public Plugin:myinfo =
 {
-        name = "No Cap Deaths",
+        name = "No Death Caps",
         author = "Jacob",
         description = "Releases survivors and applies damage when all survivors are capped.",
         version = "1.0",
