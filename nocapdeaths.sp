@@ -8,7 +8,7 @@
 #define TAUNT_HIGH_THRESHOLD            0.4
 #define TAUNT_MID_THRESHOLD             0.2
 #define TAUNT_LOW_THRESHOLD             0.04
-#define PLAYERS_CAPPED				        	0
+#define PLAYERS_CAPPED			0
 
 enum SIClasses
 {
@@ -62,7 +62,7 @@ public OnPluginStart()
         
         hCvarDmgThreshold = CreateConVar("damage_from_caps", "33", "Amount of damage done (at once) before SI suicides.", FCVAR_PLUGIN, true, 1.0);
         
-	    	hSurvivorCount = FindConVar("survivor_limit");
+        hSurvivorCount = FindConVar("survivor_limit");
 		
         HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
 }
