@@ -9,11 +9,11 @@
 #include <sdktools>
 #include "left4downtown"
  
-#define TEAM_INFECTED                   3
-#define TAUNT_HIGH_THRESHOLD            0.4
-#define TAUNT_MID_THRESHOLD             0.2
-#define TAUNT_LOW_THRESHOLD             0.04
-#define PLAYERS_CAPPED			0
+#define TEAM_INFECTED					3
+#define TAUNT_HIGH_THRESHOLD			0.4
+#define TAUNT_MID_THRESHOLD				0.2
+#define TAUNT_LOW_THRESHOLD				0.04
+#define PLAYERS_CAPPED					0
 
 enum SIClasses
 {
@@ -44,13 +44,13 @@ static String:SINames[_:SIClasses][] =
  
 new Handle: hCvarDmgThreshold = INVALID_HANDLE;
 new Handle: hSpecialInfectedHP[_:SIClasses] = INVALID_HANDLE;
-
+new Handle: hSurvivorCount;
 
 public Plugin:myinfo =
 {
         name = "No Death Caps",
         author = "Jacob",
-        description = "Releases survivors and applies damage when all survivors are capped.",
+        description = "Better cap removal control. Supports any number of players.",
         version = "1.0",
         url = "https://github.com/jacob404/myplugins"
 }
@@ -64,12 +64,26 @@ public OnPluginStart()
                 Format(buffer, sizeof(buffer), "z_%s_health", SINames[i]);
                 hSpecialInfectedHP[i] = FindConVar(buffer);
         }
-        
-        hCvarDmgThreshold = CreateConVar("damage_from_caps", "33", "Amount of damage done (at once) before SI suicides.", FCVAR_PLUGIN, true, 1.0);
-        
-        hSurvivorCount = FindConVar("survivor_limit");
 		
+		//Cvars and whatnot
+        hCvarDmgThreshold = CreateConVar("damage_from_caps", "33", "Amount of damage done (at once) before SI suicides.", FCVAR_PLUGIN, true, 1.0);
+		//hCvarLedgeHangCounts = CreateConVar("ledge_hang_counts", "0", "Should ledge hangs increase the capped survivor count?", FCVAR_PLUGIN);
+		hSurvivorCount = FindConVar("survivor_limit");
+		
+		//Hooks
         HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
+		
+		HookEvent("lunge_pounce", survivor_capped);
+		HookEvent("tongue_grab", survivor_capped);
+		HookEvent("jockey_ride", survivor_capped);
+		HookEvent("charger_pummel_start", survivor_capped);
+
+		HookEvent("pounce_stopped", survivor_free);
+		HookEvent("tongue_release", survivor_free);
+		HookEvent("jockey_ride_end", survivor_free);
+		HookEvent("charger_pummel_end", survivor_free);
+
+		//HookEvent("player_ledge_grab", player_ledge_grab);
 }
  
 public Action:Event_PlayerHurt(Handle:event, const String:name[], bool:dontBroadcast)
