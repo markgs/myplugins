@@ -40,6 +40,10 @@ static String:SINames[_:SIClasses][] =
 new Handle: hCvarDamageFromCaps = INVALID_HANDLE;
 new Handle: hSpecialInfectedHP[_:SIClasses] = INVALID_HANDLE;
 new Handle: hSurvivorCount;
+new Handle: hPounceDamage;
+new Handle: hRideDamage;
+new Handle: hPoundDamage;
+//new Handle: hPullDamage;
 
 public Plugin:myinfo =
 {
