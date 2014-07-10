@@ -93,9 +93,9 @@ public Action:Event_Survivor_Capped(Handle:event, const String:name[], bool:dont
 		
 	if (playersCapped >= GetConVarInt(hSurvivorCount))
 		{
-		SetConVarInt(hPounceDamage, hCvarDamageFromCaps);
-		SetConVarInt(hRideDamage, hCvarDamageFromCaps);
-		SetConVarInt(hPoundDamage, hCvarDamageFromCaps);
+		SetConVarInt(hPounceDamage, GetConVarInt(hCvarDamageFromCaps));
+		SetConVarInt(hRideDamage, GetConVarInt(hCvarDamageFromCaps));
+		SetConVarInt(hPoundDamage, GetConVarInt(hCvarDamageFromCaps));
 		//SetConVarInt(smokersarebroken, hCvarDamageFromCaps);
 		}
 	else
