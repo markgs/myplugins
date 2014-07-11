@@ -83,8 +83,7 @@ public OnPluginStart()
         HookEvent("tongue_release", Event_Survivor_Free);
         HookEvent("jockey_ride_end", Event_Survivor_Free);
         HookEvent("charger_pummel_end", Event_Survivor_Free);
-
-		//HookEvent("player_ledge_grab", survivor_hung);
+        //HookEvent("player_ledge_grab", survivor_hung);
 }
 
 public Action:Event_Survivor_Capped(Handle:event, const String:name[], bool:dontBroadcast)
@@ -92,19 +91,19 @@ public Action:Event_Survivor_Capped(Handle:event, const String:name[], bool:dont
 	playersCapped = (playersCapped + 1);
 		
 	if (playersCapped >= GetConVarInt(hSurvivorCount))
-		{
+	{
 		SetConVarInt(hPounceDamage, GetConVarInt(hCvarDamageFromCaps));
 		SetConVarInt(hRideDamage, GetConVarInt(hCvarDamageFromCaps));
 		SetConVarInt(hPoundDamage, GetConVarInt(hCvarDamageFromCaps));
 		//SetConVarInt(smokersarebroken, hCvarDamageFromCaps);
-		}
+	}
 	else
-		{
+	{
 		ResetConVar(hPounceDamage);
 		ResetConVar(hRideDamage);
 		ResetConVar(hPoundDamage);
 		//ResetConVar(smokersarebroken);
-		}
+	}
 }
 
 public Action:Event_Survivor_Free(Handle:event, const String:name[], bool:dontBroadcast)
@@ -147,11 +146,11 @@ public Action:Event_PlayerHurt(Handle:event, const String:name[], bool:dontBroad
                 
                 if (remaining_health == 1)
                 {
-                        PrintToChat(victim, "Get owned.");
+                        PrintToChat(victim, "Ouch.");
                 }
                 else if (remaining_health <= RoundToCeil(maxHealth * TAUNT_LOW_THRESHOLD))
                 {
-                        PrintToChat(victim, "You seem upset.");
+                        PrintToChat(victim, "Unlucky!");
                 }
                 else if (remaining_health <= RoundToCeil(maxHealth * TAUNT_MID_THRESHOLD))
                 {
