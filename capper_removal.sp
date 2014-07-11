@@ -5,7 +5,7 @@
 #include "left4downtown"
  
 #define TEAM_INFECTED					3
-#define TAUNT_HIGH_THRESHOLD			0.4
+#define TAUNT_HIGH_THRESHOLD				0.4
 #define TAUNT_MID_THRESHOLD				0.2
 #define TAUNT_LOW_THRESHOLD				0.04
 
@@ -64,16 +64,16 @@ public OnPluginStart()
             hSpecialInfectedHP[i] = FindConVar(buffer);
         }
 		
-		//Cvars and whatnot
+	//Cvars and whatnot
         hCvarDamageFromCaps = CreateConVar("damage_from_caps", "33", "Amount of damage done (at once) before SI suicides.", FCVAR_PLUGIN, true, 1.0);
-		//hCvarLedgeHangCounts = CreateConVar("ledge_hang_counts", "0", "Should ledge hangs increase the capped survivor count?", FCVAR_PLUGIN);
+	//hCvarLedgeHangCounts = CreateConVar("ledge_hang_counts", "0", "Should ledge hangs increase the capped survivor count?", FCVAR_PLUGIN);
         hSurvivorCount = FindConVar("survivor_limit");
         hPounceDamage = FindConVar("z_pounce_damage");
         hRideDamage = FindConVar("z_jockey_ride_damage");
         hPoundDamage = FindConVar("z_charger_pound_damage");
-		//hPullDamage = FindConVar("smokersarebroken");
+	//hPullDamage = FindConVar("smokersarebroken");
 		
-		//Hooks
+	//Hooks
         HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
         HookEvent("lunge_pounce", Event_Survivor_Capped);
         HookEvent("tongue_grab", Event_Survivor_Capped);
