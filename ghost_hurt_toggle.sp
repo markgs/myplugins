@@ -1,3 +1,10 @@
+/*
+This plugin is irrelevant because the confoglcompmod module used for it doesn't function like I thought it did. 
+It removes the triggers on map load meaning that even with the convar being changed it will have no effect.
+I am instead updating the module to allow for something similar to this plugin. It will be uploaded to this git.
+It's unforunate cuz this plugin works as it's intended to... Oh well I guess this can be framework for another plugin.
+*/
+
 #pragma semicolon 1
 
 #include <sourcemod>
