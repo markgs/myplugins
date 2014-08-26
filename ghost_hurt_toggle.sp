@@ -9,7 +9,6 @@ It's unforunate cuz this plugin works as it's intended to... Oh well I guess thi
 
 #include <sourcemod>
 #include <sdktools>
-#include <left4downtown>
 #undef REQUIRE_PLUGIN
 #include <readyup>
 #define REQUIRE_PLUGIN
