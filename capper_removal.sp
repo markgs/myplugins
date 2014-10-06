@@ -38,6 +38,10 @@ static String:SINames[_:SIClasses][] =
  
 new Handle: hCvarDamageFromCaps = INVALID_HANDLE;
 new Handle: hSpecialInfectedHP[_:SIClasses] = INVALID_HANDLE;
+//new Handle: hPrintTaunts;
+//new Handle: hLowTauntPrint;
+//new Handle: hMidTauntPrint;
+//new Handle: hHighTauntPrint;
 new Handle: hSurvivorCount;
 new Handle: hPounceDamage;
 new Handle: hRideDamage;
@@ -75,15 +79,47 @@ public OnPluginStart()
 		
 	//Hooks
         HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
-        HookEvent("lunge_pounce", Event_Survivor_Capped);
-        HookEvent("tongue_grab", Event_Survivor_Capped);
-        HookEvent("jockey_ride", Event_Survivor_Capped);
-        HookEvent("charger_pummel_start", Event_Survivor_Capped);
-        HookEvent("pounce_stopped", Event_Survivor_Free);
-        HookEvent("tongue_release", Event_Survivor_Free);
-        HookEvent("jockey_ride_end", Event_Survivor_Free);
-        HookEvent("charger_pummel_end", Event_Survivor_Free);
+        HookEvent("lunge_pounce", Event_Survivor_Pounced);
+        HookEvent("tongue_grab", Event_Survivor_Pulled);
+        HookEvent("jockey_ride", Event_Survivor_Rode);
+        HookEvent("charger_pummel_start", Event_Survivor_Charged);
+        HookEvent("pounce_stopped", Event_Pounce_End);
+        HookEvent("tongue_release", Event_Pull_End);
+        HookEvent("jockey_ride_end", Event_Ride_End);
+        HookEvent("charger_pummel_end", Event_Charge_End);
         //HookEvent("player_ledge_grab", survivor_hung);
+}
+
+public Event_Survivor_Pounced (Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new victim = GetClientOfUserId(GetEventInt(event, "victim"));
+	new attacker = GetClientOfUserId(GetEventInt(event, "userid"));
+	if (!victim) return;
+	if (!attacker) return;
+	Attacker[victim] = attacker;
+	playersCapped = (playersCapped + 1);
+	PrintToChatAll("Pounce Landed");
+	if (playersCapped >= GetConVarInt(hSurvivorCount))
+	{
+		SetConVarInt(hPounceDamage, GetConVarInt(hCvarDamageFromCaps));
+	}
+}
+
+public Event_Pounce_End (Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new victim = GetClientOfUserId(GetEventInt(event, "victim"));
+	if (!victim) return;
+	Attacker[victim] = 0;
+	PrintToChatAll("Pounce Ended");
+	playersCapped = (playersCapped - 1);
+	if (playersCapped < GetConVarInt(hSurvivorCount))
+	{
+		ResetConVar(hPounceDamage);
+	}
+	if (playersCapped < 0)
+	{
+		playersCapped = 0;
+	}
 }
 
 public Action:Event_Survivor_Capped(Handle:event, const String:name[], bool:dontBroadcast)
