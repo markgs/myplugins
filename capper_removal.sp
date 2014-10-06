@@ -46,7 +46,8 @@ new Handle: hSurvivorCount;
 new Handle: hPounceDamage;
 new Handle: hRideDamage;
 new Handle: hPoundDamage;
-//new Handle: hPullDamage;
+new Handle: hChokeDamage;
+new Handle: hDragDamage;
 new playersCapped = 0;
 
 public Plugin:myinfo =
@@ -70,33 +71,31 @@ public OnPluginStart()
 		
 	//Cvars and whatnot
         hCvarDamageFromCaps = CreateConVar("damage_from_caps", "33", "Amount of damage done (at once) before SI suicides.", FCVAR_PLUGIN, true, 1.0);
-	//hCvarLedgeHangCounts = CreateConVar("ledge_hang_counts", "0", "Should ledge hangs increase the capped survivor count?", FCVAR_PLUGIN);
+	    //hCvarLedgeHangCounts = CreateConVar("ledge_hang_counts", "0", "Should ledge hangs increase the capped survivor count?", FCVAR_PLUGIN);
         hSurvivorCount = FindConVar("survivor_limit");
         hPounceDamage = FindConVar("z_pounce_damage");
         hRideDamage = FindConVar("z_jockey_ride_damage");
         hPoundDamage = FindConVar("z_charger_pound_damage");
-	//hPullDamage = FindConVar("smokersarebroken");
+	    hChokeDamage = FindConVar("tongue_choke_damage_amount");
+		hDragDamage= FindConVar("tongue_drag_damage_amount");
 		
 	//Hooks
         HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
         HookEvent("lunge_pounce", Event_Survivor_Pounced);
-    //  HookEvent("tongue_grab", Event_Survivor_Pulled);
-    //  HookEvent("jockey_ride", Event_Survivor_Rode);
-    //  HookEvent("charger_pummel_start", Event_Survivor_Charged);
+        HookEvent("tongue_grab", Event_Survivor_Pulled);
+        HookEvent("jockey_ride", Event_Survivor_Rode);
+        HookEvent("charger_pummel_start", Event_Survivor_Charged);
         HookEvent("pounce_stopped", Event_Pounce_End);
-    //  HookEvent("tongue_release", Event_Pull_End);
-    //  HookEvent("jockey_ride_end", Event_Ride_End);
-    //  HookEvent("charger_pummel_end", Event_Charge_End);
+        HookEvent("tongue_release", Event_Pull_End);
+        HookEvent("jockey_ride_end", Event_Ride_End);
+        HookEvent("charger_pummel_end", Event_Charge_End);
         //HookEvent("player_ledge_grab", survivor_hung);
 }
 
 public Event_Survivor_Pounced (Handle:event, const String:name[], bool:dontBroadcast)
 {
 	new victim = GetClientOfUserId(GetEventInt(event, "userid"));
-	new attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
 	if (!victim) return;
-	if (!attacker) return;
-	//Attacker[victim] = attacker;
 	playersCapped = (playersCapped + 1);
 	PrintToChatAll("Pounce Landed");
 	if (playersCapped >= GetConVarInt(hSurvivorCount))
@@ -109,12 +108,11 @@ public Event_Pounce_End (Handle:event, const String:name[], bool:dontBroadcast)
 {
 	new victim = GetClientOfUserId(GetEventInt(event, "userid"));
 	if (!victim) return;
-	//Attacker[victim] = 0;
 	PrintToChatAll("Pounce Ended");
 	playersCapped = (playersCapped - 1);
 	if (playersCapped < GetConVarInt(hSurvivorCount))
 	{
-		ResetConVar(hPounceDamage);
+		SetConVarInt(hPounceDamage, 5);
 	}
 	if (playersCapped < 0)
 	{
@@ -122,35 +120,85 @@ public Event_Pounce_End (Handle:event, const String:name[], bool:dontBroadcast)
 	}
 }
 
-public Action:Event_Survivor_Capped(Handle:event, const String:name[], bool:dontBroadcast)
+public Event_Survivor_Rode (Handle:event, const String:name[], bool:dontBroadcast)
 {
+	new victim = GetClientOfUserId(GetEventInt(event, "userid"));
+	if (!victim) return;
 	playersCapped = (playersCapped + 1);
-		
+	PrintToChatAll("Jock Landed");
 	if (playersCapped >= GetConVarInt(hSurvivorCount))
 	{
-		SetConVarInt(hPounceDamage, GetConVarInt(hCvarDamageFromCaps));
 		SetConVarInt(hRideDamage, GetConVarInt(hCvarDamageFromCaps));
-		SetConVarInt(hPoundDamage, GetConVarInt(hCvarDamageFromCaps));
-		//SetConVarInt(smokersarebroken, hCvarDamageFromCaps);
-	}
-	else
-	{
-		ResetConVar(hPounceDamage);
-		ResetConVar(hRideDamage);
-		ResetConVar(hPoundDamage);
-		//ResetConVar(smokersarebroken);
 	}
 }
 
-public Action:Event_Survivor_Free(Handle:event, const String:name[], bool:dontBroadcast)
+public Event_Ride_End (Handle:event, const String:name[], bool:dontBroadcast)
 {
+	new victim = GetClientOfUserId(GetEventInt(event, "userid"));
+	if (!victim) return;
+	PrintToChatAll("Jock Ended");
 	playersCapped = (playersCapped - 1);
 	if (playersCapped < GetConVarInt(hSurvivorCount))
 	{
-		ResetConVar(hPounceDamage);
-		ResetConVar(hRideDamage);
-		ResetConVar(hPoundDamage);
-		//ResetConVar(smokersarebroken);
+		SetConVarInt(hRideDamage, 4);
+	}
+	if (playersCapped < 0)
+	{
+		playersCapped = 0;
+	}
+}
+
+public Event_Survivor_Charged (Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new victim = GetClientOfUserId(GetEventInt(event, "userid"));
+	if (!victim) return;
+	playersCapped = (playersCapped + 1);
+	PrintToChatAll("Charge Landed");
+	if (playersCapped >= GetConVarInt(hSurvivorCount))
+	{
+		SetConVarInt(hPoundDamage, GetConVarInt(hCvarDamageFromCaps));
+	}
+}
+
+public Event_Charge_End (Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new victim = GetClientOfUserId(GetEventInt(event, "userid"));
+	if (!victim) return;
+	PrintToChatAll("Charge Ended");
+	playersCapped = (playersCapped - 1);
+	if (playersCapped < GetConVarInt(hSurvivorCount))
+	{
+		SetConVarInt(hPoundDamage, 15);
+	}
+	if (playersCapped < 0)
+	{
+		playersCapped = 0;
+	}
+}
+
+public Event_Survivor_Pulled (Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new victim = GetClientOfUserId(GetEventInt(event, "userid"));
+	if (!victim) return;
+	playersCapped = (playersCapped + 1);
+	PrintToChatAll("Pull Landed");
+	if (playersCapped >= GetConVarInt(hSurvivorCount))
+	{
+		SetConVarInt(hChokeDamage, GetConVarInt(hCvarDamageFromCaps));
+		SetConVarInt(hDragDamage, GetConVarInt(hCvarDamageFromCaps));
+	}
+}
+
+public Event_Pull_End (Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new victim = GetClientOfUserId(GetEventInt(event, "userid"));
+	if (!victim) return;
+	PrintToChatAll("Pull Ended");
+	playersCapped = (playersCapped - 1);
+	if (playersCapped < GetConVarInt(hSurvivorCount))
+	{
+		SetConVarInt(hChokeDamage, 5);
+		SetConVarInt(hDragDamage, 3);
 	}
 	if (playersCapped < 0)
 	{
