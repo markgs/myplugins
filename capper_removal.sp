@@ -80,23 +80,23 @@ public OnPluginStart()
 	//Hooks
         HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
         HookEvent("lunge_pounce", Event_Survivor_Pounced);
-        HookEvent("tongue_grab", Event_Survivor_Pulled);
-        HookEvent("jockey_ride", Event_Survivor_Rode);
-        HookEvent("charger_pummel_start", Event_Survivor_Charged);
+    //  HookEvent("tongue_grab", Event_Survivor_Pulled);
+    //  HookEvent("jockey_ride", Event_Survivor_Rode);
+    //  HookEvent("charger_pummel_start", Event_Survivor_Charged);
         HookEvent("pounce_stopped", Event_Pounce_End);
-        HookEvent("tongue_release", Event_Pull_End);
-        HookEvent("jockey_ride_end", Event_Ride_End);
-        HookEvent("charger_pummel_end", Event_Charge_End);
+    //  HookEvent("tongue_release", Event_Pull_End);
+    //  HookEvent("jockey_ride_end", Event_Ride_End);
+    //  HookEvent("charger_pummel_end", Event_Charge_End);
         //HookEvent("player_ledge_grab", survivor_hung);
 }
 
 public Event_Survivor_Pounced (Handle:event, const String:name[], bool:dontBroadcast)
 {
-	new victim = GetClientOfUserId(GetEventInt(event, "victim"));
-	new attacker = GetClientOfUserId(GetEventInt(event, "userid"));
+	new victim = GetClientOfUserId(GetEventInt(event, "userid"));
+	new attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
 	if (!victim) return;
 	if (!attacker) return;
-	Attacker[victim] = attacker;
+	//Attacker[victim] = attacker;
 	playersCapped = (playersCapped + 1);
 	PrintToChatAll("Pounce Landed");
 	if (playersCapped >= GetConVarInt(hSurvivorCount))
@@ -107,9 +107,9 @@ public Event_Survivor_Pounced (Handle:event, const String:name[], bool:dontBroad
 
 public Event_Pounce_End (Handle:event, const String:name[], bool:dontBroadcast)
 {
-	new victim = GetClientOfUserId(GetEventInt(event, "victim"));
+	new victim = GetClientOfUserId(GetEventInt(event, "userid"));
 	if (!victim) return;
-	Attacker[victim] = 0;
+	//Attacker[victim] = 0;
 	PrintToChatAll("Pounce Ended");
 	playersCapped = (playersCapped - 1);
 	if (playersCapped < GetConVarInt(hSurvivorCount))
