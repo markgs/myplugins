@@ -48,7 +48,7 @@ new Handle: hRideDamage;
 new Handle: hPoundDamage;
 new Handle: hChokeDamage;
 new Handle: hDragDamage;
-new playersCapped = 0;
+new Handle: PlayersCapped;
 
 public Plugin:myinfo =
 {
