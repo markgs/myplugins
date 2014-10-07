@@ -50,7 +50,7 @@ public Plugin:myinfo =
 public OnPluginStart()
 {
 		//Cvars and whatnot
-		hCvarSurvivorCount = CreateConVar("cr_survivors_count", "2", "Amount of damage done (at once) before SI suicides.", FCVAR_PLUGIN, true, 1.0);
+		hCvarSurvivorCount = CreateConVar("cr_survivors_count", "2", "How many survivors are in this config?", FCVAR_PLUGIN, true, 1.0);
 		SurvivorCount = GetConVarInt(hCvarSurvivorCount);
 		
 		//Hooks
