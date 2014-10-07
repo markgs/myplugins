@@ -5,6 +5,7 @@
 #include "left4downtown"
 
 #define TEAM_INFECTED 3
+#define debug 0
 
 enum SIClasses
 {
@@ -56,6 +57,10 @@ public capStart(Handle:event)
     new victim = GetClientOfUserId(GetEventInt(event, "userid"));
     if (!victim) return;
     PlayersCapped++;
+	if(debug)
+	{
+	PrintToChatAll("Players Capped: %i", PlayersCapped);
+	}
 }
 
 public capEnd(Handle:event)
@@ -66,6 +71,10 @@ public capEnd(Handle:event)
     {
         PlayersCapped = 0;
     }
+	if (debug)
+	{
+	PrintToChatAll("Players Capped: %i", PlayersCapped);
+	}
 }
 
 public Event_Survivor_Pounced (Handle:event, const String:name[], bool:dontBroadcast)
