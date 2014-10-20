@@ -70,88 +70,58 @@ public OnLibraryAdded(const String:name[])
 
 public OnRoundIsLive()
 {
+    DetermineItems();
+}
+
+public Action:PlayerLeftStartArea(Handle:event, const String:name[], bool:dontBroadcast)
+{
+    if (!g_bReadyUpAvailable) DetermineItems();
+}	
+
+public DetermineItems()
+{
     new String:strItemName[32];
     iItemFlags = GetConVarInt(hCvarItemType);
 
-    if (iItemFlags) {
-        if (iItemFlags & HEALTH_FIRST_AID_KIT) {
+    if (iItemFlags)
+	{
+        if (iItemFlags & HEALTH_FIRST_AID_KIT)
+		{
             strItemName = "weapon_first_aid_kit";
             giveStartingItem(strItemName);
         }
-        else if (iItemFlags & HEALTH_DEFIBRILLATOR) {
+        else if (iItemFlags & HEALTH_DEFIBRILLATOR)
+		{
             strItemName = "weapon_defibrillator";
             giveStartingItem(strItemName);
         }
-        if (iItemFlags & HEALTH_PAIN_PILLS) {
+        if (iItemFlags & HEALTH_PAIN_PILLS)
+		{
             strItemName = "weapon_pain_pills";
             giveStartingItem(strItemName);
         }
-        else if (iItemFlags & HEALTH_ADRENALINE) {
+        else if (iItemFlags & HEALTH_ADRENALINE)
+		{
             strItemName = "weapon_adrenaline";
             giveStartingItem(strItemName);
         }
-        if (iItemFlags & THROWABLE_PIPE_BOMB) {
+        if (iItemFlags & THROWABLE_PIPE_BOMB)
+		{
             strItemName = "weapon_pipe_bomb";
             giveStartingItem(strItemName);
         }
-        else if (iItemFlags & THROWABLE_MOLOTOV) {
+        else if (iItemFlags & THROWABLE_MOLOTOV)
+		{
             strItemName = "weapon_molotov";
             giveStartingItem(strItemName);
         }
-        else if (iItemFlags & THROWABLE_VOMITJAR) {
+        else if (iItemFlags & THROWABLE_VOMITJAR)
+		{
             strItemName = "weapon_vomitjar";
             giveStartingItem(strItemName);
         }
     }
 }
-
-public Action:PlayerLeftStartArea(Handle:event, const String:name[], bool:dontBroadcast)
-{
-    if (!g_bReadyUpAvailable)
-	{
-		new String:strItemName[32];
-		iItemFlags = GetConVarInt(hCvarItemType);
-
-		if (iItemFlags) 
-		{
-			if (iItemFlags & HEALTH_FIRST_AID_KIT)
-			{
-				strItemName = "weapon_first_aid_kit";
-				giveStartingItem(strItemName);
-			}
-			else if (iItemFlags & HEALTH_DEFIBRILLATOR)
-			{
-				strItemName = "weapon_defibrillator";
-				giveStartingItem(strItemName);
-			}
-			if (iItemFlags & HEALTH_PAIN_PILLS)
-			{
-				strItemName = "weapon_pain_pills";
-				giveStartingItem(strItemName);
-			}
-			else if (iItemFlags & HEALTH_ADRENALINE)
-			{
-				strItemName = "weapon_adrenaline";
-				giveStartingItem(strItemName);
-			}
-			if (iItemFlags & THROWABLE_PIPE_BOMB)
-			{
-				strItemName = "weapon_pipe_bomb";
-				giveStartingItem(strItemName);
-			}
-			else if (iItemFlags & THROWABLE_MOLOTOV)
-			{
-				strItemName = "weapon_molotov";
-				giveStartingItem(strItemName);
-			}
-			else if (iItemFlags & THROWABLE_VOMITJAR)
-			{
-				strItemName = "weapon_vomitjar";
-				giveStartingItem(strItemName);
-			}
-		}
-	}
-}	
 
 giveStartingItem(const String:strItemName[32])
 {
