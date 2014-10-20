@@ -1,4 +1,3 @@
-
 #pragma semicolon 1
 
 #include <sourcemod>
@@ -7,7 +6,6 @@
 #include <readyup>
 #define REQUIRE_PLUGIN
 
-new Handle:hGhostHurtState;
 new Handle:ghost_hurt_type;
 new bool:g_bReadyUpAvailable = false;
 
@@ -16,13 +14,13 @@ public Plugin:myinfo =
     name = "Ghost Hurt Toggle",
     author = "Jacob",
     description = "Enables ghost hurt after the round goes live.",
-    version = "0.1",
+    version = "1.0",
     url = "github.com/jacob404/myplugins"
 }
 
 public OnPluginStart()
 {
-	ghost_hurt_type = CreateConVar("ghost_hurt_type", "1", "When should trigger_hurt_ghost be enabled? 0 = Never, 1 = On Round Start, 2 = Always", FCVAR_PLUGIN, true, 0.0, true, 2.0);
+	ghost_hurt_type = CreateConVar("ghost_hurt_type", "0", "When should trigger_hurt_ghost be enabled? 0 = Never, 1 = On Round Start", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	HookEvent("round_end", Event_Round_End);
 	
 }
@@ -45,7 +43,7 @@ public OnLibraryAdded(const String:name[])
 
 public OnRoundIsLive()
 {
-	if(GetConVarInt(ghost_hurt_type) == 1)
+	if(GetConVarBool(ghost_hurt_type) == true)
 	{
 		EnableGhostHurt();
 	}
@@ -53,7 +51,7 @@ public OnRoundIsLive()
 
 public Action: L4D_OnFirstSurvivorLeftSafeArea( client )
 {   
-    if (!g_bReadyUpAvailable && GetConVarInt(ghost_hurt_type) == 1)
+    if (!g_bReadyUpAvailable && GetConVarBool(ghost_hurt_type) == true)
 	{
         EnableGhostHurt();
     }
@@ -61,14 +59,7 @@ public Action: L4D_OnFirstSurvivorLeftSafeArea( client )
 
 public OnMapStart()
 {
-	if(GetConVarInt(ghost_hurt_type) << 2)
-	{
-		DisableGhostHurt();
-	}
-	else
-	{
-		EnableGhostHurt();
-	}
+	DisableGhostHurt();
 }
 
 public DisableGhostHurt()
@@ -97,13 +88,5 @@ ModifyEntity(String:className[], String:inputName[])
 
 public Event_Round_End(Handle:event, const String:name[], bool:dontBroadcast)
 {
-	if(GetConVarInt(ghost_hurt_type) << 2)
-	{
-		DisableGhostHurt();
-	}
-}
-
-public OnPluginEnd()
-{
-	EnableGhostHurt();
+	DisableGhostHurt();
 }
