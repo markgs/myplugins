@@ -10,7 +10,7 @@ public Plugin:myinfo =
     name = "SI Fire Immunity",
     author = "Jacob",
     description = "Special Infected fire damage management.",
-    version = "0.1",
+    version = "1.0",
     url = "github.com/jacob404/myplugins"
 }
 
