@@ -4,13 +4,6 @@
 #include <sdktools>
 #include <left4downtown>
 
-#define ZC_SMOKER               1
-#define ZC_BOOMER               2
-#define ZC_HUNTER               3
-#define ZC_SPITTER              4
-#define ZC_JOCKEY               5
-#define ZC_CHARGER              6
-
 new Handle:si_restore_ratio;
 
 public Plugin:myinfo = 
