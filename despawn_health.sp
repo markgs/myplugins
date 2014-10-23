@@ -18,7 +18,7 @@ public Plugin:myinfo =
     name = "Despawn Health",
     author = "Jacob",
     description = "Gives Special Infected health back when they despawn.",
-    version = "1.2",
+    version = "1.3",
     url = "github.com/jacob404/myplugins"
 }
 
@@ -32,7 +32,7 @@ public L4D_OnEnterGhostState(client)
     new CurrentHealth = GetClientHealth(client);
     new MaxHealth = GetEntProp(client, Prop_Send, "m_iMaxHealth");
 	if (CurrentHealth != MaxHealth)
-	{
+    {
         new MissingHealth = MaxHealth - CurrentHealth;
         new NewHP = RoundFloat(MissingHealth * GetConVarFloat(si_restore_ratio)) + CurrentHealth;
 	    SetEntityHealth(client, NewHP);
