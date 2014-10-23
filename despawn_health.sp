@@ -31,10 +31,10 @@ public L4D_OnEnterGhostState(client)
 {
     new CurrentHealth = GetClientHealth(client);
     new MaxHealth = GetEntProp(client, Prop_Send, "m_iMaxHealth");
-	if (CurrentHealth != MaxHealth)
+    if (CurrentHealth != MaxHealth)
     {
         new MissingHealth = MaxHealth - CurrentHealth;
         new NewHP = RoundFloat(MissingHealth * GetConVarFloat(si_restore_ratio)) + CurrentHealth;
-	    SetEntityHealth(client, NewHP);
+        SetEntityHealth(client, NewHP);
     }
 }
