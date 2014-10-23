@@ -12,14 +12,13 @@
 #define ZC_CHARGER              6
 
 new Handle:si_restore_ratio;
-new MaxHealth;
 
 public Plugin:myinfo = 
 {
     name = "Despawn Health",
     author = "Jacob",
     description = "Gives Special Infected health back when they despawn.",
-    version = "1.0",
+    version = "1.2",
     url = "github.com/jacob404/myplugins"
 }
 
@@ -31,32 +30,7 @@ public OnPluginStart()
 public L4D_OnEnterGhostState(client)
 {
     new CurrentHealth = GetClientHealth(client);
-	
-    if (GetEntProp(client, Prop_Send, "m_zombieClass") == ZC_CHARGER)
-    {
-        MaxHealth = 600;
-    }
-    else if (GetEntProp(client, Prop_Send, "m_zombieClass") == ZC_JOCKEY)
-    {
-        MaxHealth = 325;
-    }
-    else if (GetEntProp(client, Prop_Send, "m_zombieClass") == ZC_HUNTER)
-    {
-        MaxHealth = 250;
-    }
-    else if (GetEntProp(client, Prop_Send, "m_zombieClass") == ZC_SMOKER)
-    {
-        MaxHealth = 250;
-    }
-    else if (GetEntProp(client, Prop_Send, "m_zombieClass") == ZC_SPITTER)
-    {
-        MaxHealth = 100;
-    }
-    else if (GetEntProp(client, Prop_Send, "m_zombieClass") == ZC_BOOMER)
-    {
-        MaxHealth = 50;
-    }
-	
+    new MaxHealth = GetEntProp(client, Prop_Send, "m_iMaxHealth");
     new MissingHealth = MaxHealth - CurrentHealth;
     new NewHP = RoundFloat(MissingHealth * GetConVarFloat(si_restore_ratio)) + CurrentHealth;
     SetEntityHealth(client, NewHP);
