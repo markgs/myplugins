@@ -14,7 +14,7 @@ public Plugin:myinfo =
     name = "Ghost Hurt Management",
     author = "Jacob",
     description = "Allows for modifications of trigger_hurt_ghost",
-    version = "1.1",
+    version = "1.2",
     url = "github.com/jacob404/myplugins"
 }
 
@@ -93,5 +93,5 @@ public Event_Round_Start(Handle:event, const String:name[], bool:dontBroadcast)
 
 public Action:ResetGhostHurt_Cmd(args)
 {
-    DisableGhostHurt();
+    EnableGhostHurt();
 }
