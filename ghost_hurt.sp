@@ -1,4 +1,4 @@
-#pragma semicolon 1
+ #pragma semicolon 1
 
 #include <sourcemod>
 #include <sdktools>
@@ -11,18 +11,18 @@ new bool:g_bReadyUpAvailable = false;
 
 public Plugin:myinfo = 
 {
-    name = "Ghost Hurt Toggle",
+    name = "Ghost Hurt Management",
     author = "Jacob",
-    description = "Enables ghost hurt after the round goes live.",
-    version = "1.0",
+    description = "Allows for modifications of trigger_hurt_ghost",
+    version = "1.1",
     url = "github.com/jacob404/myplugins"
 }
 
 public OnPluginStart()
 {
-	ghost_hurt_type = CreateConVar("ghost_hurt_type", "0", "When should trigger_hurt_ghost be enabled? 0 = Never, 1 = On Round Start", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	HookEvent("round_end", Event_Round_End);
-	
+    ghost_hurt_type = CreateConVar("ghost_hurt_type", "0", "When should trigger_hurt_ghost be enabled? 0 = Never, 1 = On Round Start", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+    HookEvent("round_start", Event_Round_Start, EventHookMode_PostNoCopy);
+    RegServerCmd("sm_reset_ghost_hurt", ResetGhostHurt_Cmd, "Used to reset trigger_hurt_ghost between matches.  This should be in confogl_off.cfg or equivalent for your system");
 }
 
 // Check for readyup plugin.
@@ -43,50 +43,55 @@ public OnLibraryAdded(const String:name[])
 
 public OnRoundIsLive()
 {
-	if(GetConVarBool(ghost_hurt_type) == true)
-	{
-		EnableGhostHurt();
-	}
+    if(GetConVarBool(ghost_hurt_type) == true)
+    {
+        EnableGhostHurt();
+    }
 }
 
 public Action: L4D_OnFirstSurvivorLeftSafeArea( client )
 {   
     if (!g_bReadyUpAvailable && GetConVarBool(ghost_hurt_type) == true)
-	{
+    {
         EnableGhostHurt();
     }
 }
 
 public OnMapStart()
 {
-	DisableGhostHurt();
+    DisableGhostHurt();
 }
 
 public DisableGhostHurt()
 {
-	ModifyEntity("trigger_hurt_ghost", "Disable");
+    ModifyEntity("trigger_hurt_ghost", "Disable");
 }
 
 public EnableGhostHurt()
 {
-	ModifyEntity("trigger_hurt_ghost", "Enable");
+    ModifyEntity("trigger_hurt_ghost", "Enable");
 }
 
 ModifyEntity(String:className[], String:inputName[])
 { 
     new iEntity;
-    
+
     while ( (iEntity = FindEntityByClassname(iEntity, className)) != -1 )
-	{
+    {
         if ( !IsValidEdict(iEntity) || !IsValidEntity(iEntity) )
-		{
+        {
             continue;
         }
         AcceptEntityInput(iEntity, inputName);
     }
 }
 
-public Event_Round_End(Handle:event, const String:name[], bool:dontBroadcast)
+public Event_Round_Start(Handle:event, const String:name[], bool:dontBroadcast)
 {
-	DisableGhostHurt();
+    DisableGhostHurt();
+}
+
+public Action:ResetGhostHurt_Cmd(args)
+{
+    DisableGhostHurt();
 }

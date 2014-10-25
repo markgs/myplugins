@@ -4,14 +4,17 @@
 #include <sdktools>
 
 new Handle:GW_hGhostWarp;
+new Handle:GW_hGhostWarpReload;
 new bool:GW_bEnabled = true;
+new bool:GW_bReload = false;
 new bool:GW_bDelay[MAXPLAYERS+1];
 new GW_iLastTarget[MAXPLAYERS+1] = -1;
 
 GW_OnModuleStart()
 {
 	// GhostWarp
-	GW_hGhostWarp = CreateConVarEx("ghost_warp", "1", "Sets whether infected ghosts can press reload to warp to next survivor");
+	GW_hGhostWarp = CreateConVarEx("ghost_warp", "1", "Sets whether infected ghosts can right click for warp to next survivor");
+	GW_hGhostWarpReload = CreateConVarEx("ghost_warp_reload", "0", "Sets whether to use mouse2 or reload for ghost warp.");
 	
 	// Ghost Warp
 	HookEvent("player_death",GW_PlayerDeath_Event);
@@ -19,14 +22,16 @@ GW_OnModuleStart()
 	RegConsoleCmd("sm_warptosurvivor",GW_Cmd_WarpToSurvivor);
 	
 	GW_bEnabled = GetConVarBool(GW_hGhostWarp);
+	GW_bReload = GetConVarBool(GW_hGhostWarpReload);
 }
 
 bool:GW_OnPlayerRunCmd(client, buttons)
 {
-	if (!IsPluginEnabled() || !GW_bEnabled || !(buttons & IN_RELOAD) || GW_bDelay[client]){return false;}
-	if (!IsClientInGame(client) || GetClientTeam(client) != TEAM_INFECTED || GetEntProp(client,Prop_Send,"m_isGhost",1) != 1){return false;}
-	
-	GW_bDelay[client] = true;
+    if (! IsPluginEnabled() || ! GW_bEnabled || GW_bDelay[client] || ! IsClientInGame(client) || GetClientTeam(client) != TEAM_INFECTED || GetEntProp(client, Prop_Send, "m_isGhost", 1) != 1) {return false;}
+    if (GW_bReload && !(buttons & IN_RELOAD)) {return false;}
+    if (! GW_bReload && !(buttons & IN_ATTACK2)) {return false;}
+
+    GW_bDelay[client] = true;
 	CreateTimer(0.25, GW_ResetDelay, client);
 	
 	GW_WarpToSurvivor(client,0);
