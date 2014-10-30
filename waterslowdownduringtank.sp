@@ -2,17 +2,19 @@
 
 #include <sourcemod>
 #include <colors>
+#include <sdktools>
 
 new bool:g_bIsTankAlive;
 new Handle:SlowdownFactor;
 new Handle:WSDT_Print;
+new Handle:WSDT_Sound;
 
 public Plugin:myinfo =
 {
 	name = "Water Slowdown During Tank",
 	author = "Don, Jacob, epilimic",
 	description = "Modifies water slowdown while tank is in play.",
-	version = "1.7",
+	version = "1.8",
 	url = "https://github.com/Stabbath/ProMod"
 }
 
@@ -31,6 +33,11 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 	}
 }
 
+public OnMapStart()
+{
+    PrecacheSound("ui/pickup_secret01.wav");
+}
+
 public OnPluginStart()
 {
 	HookEvent("tank_spawn", Event_tank_spawn_Callback);
@@ -38,6 +45,7 @@ public OnPluginStart()
 	HookEvent("round_end", Event_round_end_Callback);
 	
 	WSDT_Print = CreateConVar("print_slowdown_changes", "1", "Whether or not to print when we change water slowdown.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	WSDT_Sound = CreateConVar("tank_spawn_sound", "1", "Whether or not to play a sound when tank spawns.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	SlowdownFactor = FindConVar("confogl_slowdown_factor");
 }
 
@@ -50,6 +58,10 @@ public Event_tank_spawn_Callback(Handle:event, const String:name[], bool:dontBro
 		if(GetConVarBool(WSDT_Print))
 		{
 			CPrintToChatAll("{olive}Water Slowdown{default} has been reduced while Tank is in play.");
+		}
+		if(GetConVarBool(WSDT_Sound))
+		{
+			EmitSoundToAll("ui/pickup_secret01.wav", _, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
 		}
 	}
 }
