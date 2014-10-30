@@ -14,7 +14,7 @@ public Plugin:myinfo =
     name = "Ghost Hurt Management",
     author = "Jacob",
     description = "Allows for modifications of trigger_hurt_ghost",
-    version = "1.2",
+    version = "1.3",
     url = "github.com/jacob404/myplugins"
 }
 
@@ -41,6 +41,11 @@ public OnLibraryAdded(const String:name[])
     if ( StrEqual(name, "readyup") ) { g_bReadyUpAvailable = true; }
 }
 
+public OnMapStart()
+{
+    DisableGhostHurt();
+}
+
 public OnRoundIsLive()
 {
     if(GetConVarBool(ghost_hurt_type) == true)
@@ -57,9 +62,14 @@ public Action: L4D_OnFirstSurvivorLeftSafeArea( client )
     }
 }
 
-public OnMapStart()
+public Event_Round_Start(Handle:event, const String:name[], bool:dontBroadcast)
 {
     DisableGhostHurt();
+}
+
+public Action:ResetGhostHurt_Cmd(args)
+{
+    EnableGhostHurt();
 }
 
 public DisableGhostHurt()
@@ -84,14 +94,4 @@ ModifyEntity(String:className[], String:inputName[])
         }
         AcceptEntityInput(iEntity, inputName);
     }
-}
-
-public Event_Round_Start(Handle:event, const String:name[], bool:dontBroadcast)
-{
-    DisableGhostHurt();
-}
-
-public Action:ResetGhostHurt_Cmd(args)
-{
-    EnableGhostHurt();
 }
