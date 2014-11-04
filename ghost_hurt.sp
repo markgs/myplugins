@@ -14,7 +14,7 @@ public Plugin:myinfo =
     name = "Ghost Hurt Management",
     author = "Jacob",
     description = "Allows for modifications of trigger_hurt_ghost",
-    version = "1.3",
+    version = "1.4",
     url = "github.com/jacob404/myplugins"
 }
 
@@ -25,32 +25,24 @@ public OnPluginStart()
     RegServerCmd("sm_reset_ghost_hurt", ResetGhostHurt_Cmd, "Used to reset trigger_hurt_ghost between matches.  This should be in confogl_off.cfg or equivalent for your system");
 }
 
-// Check for readyup plugin.
 public OnAllPluginsLoaded()
 {
     g_bReadyUpAvailable = LibraryExists("readyup");
 }
-
 public OnLibraryRemoved(const String:name[])
 {
     if ( StrEqual(name, "readyup") ) { g_bReadyUpAvailable = false; }
 }
-
 public OnLibraryAdded(const String:name[])
 {
     if ( StrEqual(name, "readyup") ) { g_bReadyUpAvailable = true; }
-}
-
-public OnMapStart()
-{
-    DisableGhostHurt();
 }
 
 public OnRoundIsLive()
 {
     if(GetConVarBool(ghost_hurt_type) == true)
     {
-        EnableGhostHurt();
+        ModifyEntity("Enable");
     }
 }
 
@@ -58,35 +50,25 @@ public Action: L4D_OnFirstSurvivorLeftSafeArea( client )
 {   
     if (!g_bReadyUpAvailable && GetConVarBool(ghost_hurt_type) == true)
     {
-        EnableGhostHurt();
+        ModifyEntity("Enable");
     }
 }
 
 public Event_Round_Start(Handle:event, const String:name[], bool:dontBroadcast)
 {
-    DisableGhostHurt();
+    ModifyEntity("Disable");
 }
 
 public Action:ResetGhostHurt_Cmd(args)
 {
-    EnableGhostHurt();
+    ModifyEntity("Enable");
 }
 
-public DisableGhostHurt()
-{
-    ModifyEntity("trigger_hurt_ghost", "Disable");
-}
-
-public EnableGhostHurt()
-{
-    ModifyEntity("trigger_hurt_ghost", "Enable");
-}
-
-ModifyEntity(String:className[], String:inputName[])
+ModifyEntity(String:inputName[])
 { 
     new iEntity;
 
-    while ( (iEntity = FindEntityByClassname(iEntity, className)) != -1 )
+    while ( (iEntity = FindEntityByClassname(iEntity, "trigger_hurt_ghost")) != -1 )
     {
         if ( !IsValidEdict(iEntity) || !IsValidEntity(iEntity) )
         {
