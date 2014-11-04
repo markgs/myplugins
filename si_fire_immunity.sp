@@ -37,7 +37,7 @@ public SIOnFire(Handle:event, const String:name[], bool:dontBroadcast)
     if(GetConVarInt(infected_fire_immunity) == 1)
     {
         new CurHealth = GetClientHealth(client);
-        new DmgDone	  = GetEventInt(event,"dmg_health");
+        new DmgDone	= GetEventInt(event,"dmg_health");
         SetEntityHealth(client,(CurHealth + DmgDone));
     }
 }
@@ -45,7 +45,7 @@ public SIOnFire(Handle:event, const String:name[], bool:dontBroadcast)
 public Action:Extinguish(Handle:timer, any:client)
 {
     if(!inWait)
-	{
+    {
         ExtinguishEntity(client);
         inWait = true;
         CreateTimer(1.2, ExtinguishWait, client);
