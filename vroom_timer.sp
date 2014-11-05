@@ -3,7 +3,7 @@
 #include <sourcemod>
 
 new Float:Timer = 0.0;
-new Bool:TimerRunning = false;
+new bool:TimerRunning = false;
 
 public Plugin:myinfo = 
 {
@@ -41,7 +41,7 @@ public RunTimer()
 {
     if(TimerRunning)
 	{
-        CreateTimer(0.5, IncrementNumber, client);
+        CreateTimer(0.5, IncrementNumber);
     }
 }
 
