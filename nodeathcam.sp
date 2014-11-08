@@ -20,16 +20,11 @@ public OnPluginStart()
 public Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
 {
     new victim = GetClientOfUserId(GetEventInt(event,"userid"));
-    new max_clients = GetMaxClients();
-
-    for (new i = 1; i <= max_clients; i++)
+	
+    if (IsValidClient(victim) && GetClientTeam(victim) == 3)
     {
-        if (IsValidClient(i) && GetClientTeam(i) == 3)
-        {
-            SetEntPropEnt(victim, Prop_Send, "m_hObserverTarget", i);
-            SetEntPropEnt(victim, Prop_Send, "m_iObserverMode", 4);
-            break;
-        }
+        //SetEntPropEnt(victim, Prop_Send, "m_hObserverTarget", );
+        SetEntPropEnt(victim, Prop_Send, "m_iObserverMode", 3);
     }
 }
 
