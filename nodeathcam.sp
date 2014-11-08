@@ -8,7 +8,7 @@ public Plugin:myinfo =
     name = "No Death Cam",
     author = "Jacob",
     description = "Skips the deathcam infected get after dying, which also prevents an exploit with spawn timers.",
-    version = "1.0",
+    version = "1.2",
     url = "github.com/jacob404/myplugins"
 }
 
@@ -23,8 +23,7 @@ public Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
 	
     if (IsValidClient(victim) && GetClientTeam(victim) == 3)
     {
-        //SetEntPropEnt(victim, Prop_Send, "m_hObserverTarget", );
-        SetEntPropEnt(victim, Prop_Send, "m_iObserverMode", 3);
+        SetEntPropEnt(victim, Prop_Send, "m_iObserverMode", 4);
     }
 }
 
