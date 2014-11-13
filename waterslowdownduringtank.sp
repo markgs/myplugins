@@ -44,7 +44,7 @@ public OnPluginStart()
 	HookEvent("player_death", Event_player_death_Callback);
 	HookEvent("round_end", Event_round_end_Callback);
 	
-	WSDT_Print = CreateConVar("print_slowdown_changes", "1", "Whether or not to print when we change water slowdown.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	WSDT_Print = CreateConVar("tank_print_type", "1", "Whether or not to tell people slowdown has changed.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	WSDT_Sound = CreateConVar("tank_spawn_sound", "1", "Whether or not to play a sound when tank spawns.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	SlowdownFactor = FindConVar("confogl_slowdown_factor");
 }
@@ -62,6 +62,10 @@ public Event_tank_spawn_Callback(Handle:event, const String:name[], bool:dontBro
 		if(GetConVarBool(WSDT_Sound))
 		{
 			EmitSoundToAll("ui/pickup_secret01.wav", _, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
+		}
+		if(!GetConVarBool(WSDT_Print))
+		{
+			CPrintToChatAll("{olive}Tank{default} is now in play.");
 		}
 	}
 }
