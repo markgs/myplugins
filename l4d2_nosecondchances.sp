@@ -38,7 +38,7 @@ new const L4D2_SI_Victim_Slots[] = {
 public Plugin:myinfo = 
 {
     name = "L4D2 No Second Chances",
-    author = "Visor",
+    author = "Visor + Jacob",
     description = "Previously human-controlled SI bots with a cap won't die",
     version = "1.1",
     url = "https://github.com/Attano/Equilibrium"
@@ -60,7 +60,7 @@ public PlayerBotReplace(Handle:event, const String:name[], bool:dontBroadcast)
         {
             CreateTimer(delay, KillBot, bot);
         }
-		else if (ShouldBeKicked(bot))
+        else if (ShouldBeKicked(bot))
         {
             ForcePlayerSuicide(bot);
         }
