@@ -8,13 +8,14 @@ new Handle:remove_swan_clip;
 new Handle:remove_plantation_clip;
 new Handle:remove_waterfront_clip;
 new Handle:remove_sugarmill_clip;
+new Handle:remove_swamp_clip;
 
 public Plugin:myinfo = 
 {
     name = "Clip Removal",
     author = "Jacob",
     description = "Allows for removal of some pesky clips.",
-    version = "1.2",
+    version = "1.3",
     url = "github.com/jacob404/myplugins"
 }
 
@@ -25,6 +26,7 @@ public OnPluginStart()
         remove_plantation_clip = CreateConVar("remove_plantation_clip", "1", "Should we remove the clip inside the plantation on c3m4?", FCVAR_PLUGIN, true, 0.0, true, 1.0);
         remove_waterfront_clip = CreateConVar("remove_waterfront_clip", "1", "Should we remove the clip above the saferoom roof on c5m1?", FCVAR_PLUGIN, true, 0.0, true, 1.0);
         remove_sugarmill_clip = CreateConVar("remove_sugarmill_clip", "0", "Should we remove the clip over the sugarmill building on c4m2 and c4m3?", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+        remove_swamp_clip = CreateConVar("remove_swamp_clip", "1", "Should we remove the clip between the trees on c3m2?", FCVAR_PLUGIN, true, 0.0, true, 1.0);
         RegAdminCmd("sm_disableallclips", DisableAllClips_Cmd, ADMFLAG_BAN, "Removes all clips from the map. Possibly used for testing purposes.");
         RegAdminCmd("sm_enableallclips", EnableAllClips_Cmd, ADMFLAG_BAN, "Enables all clips on the map. Possibly used for testing purposes.");
 }
@@ -41,6 +43,10 @@ public OnMapStart()
     {
         DisableClips();
     }
+    else if(StrEqual(mapname, "c3m2_swamp") && GetConVarBool(remove_swamp_clip))
+    {
+        DisableFuncBrush();
+    }
     else if(StrEqual(mapname, "c3m4_plantation") && GetConVarBool(remove_plantation_clip))
     {
         DisableClips();
@@ -52,12 +58,18 @@ public OnMapStart()
     else if(StrEqual(mapname, "c5m1_waterfront") && GetConVarBool(remove_waterfront_clip))
     {
         DisableClips();
+        DisableFuncBrush();
     }
 }
 
 public DisableClips()
 {
     ModifyEntity("env_player_blocker", "Disable");
+}
+
+public DisableFuncBrush()
+{
+    ModifyEntity("func_brush", "Disable");
 }
 
 public Action:DisableAllClips_Cmd(client, args)
